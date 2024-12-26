@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  final userId;
+  final role;
+  const Home({super.key, required this.userId, required this.role});
 
   @override
   State<Home> createState() => _HomeState();
@@ -14,8 +16,8 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: const Text('Home'),
       ),
-      body: const Center(
-        child: Text('Welcome to the Home page!'),
+      body:  Center(
+        child: Text(widget.userId.toString()),
       ),
     );
   }
