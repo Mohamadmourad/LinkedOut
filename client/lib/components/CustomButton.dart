@@ -9,7 +9,7 @@ class CustomButton extends StatelessWidget {
     super.key,
     required this.label,
     required this.onPressed,
-    this.color = Colors.blue,
+    this.color = Colors.blueGrey,
   });
 
   @override
@@ -17,13 +17,13 @@ class CustomButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: SizedBox(
-        width: double.infinity, 
+        width: double.infinity,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             backgroundColor: color,
             padding: const EdgeInsets.symmetric(vertical: 15),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5), 
+              borderRadius: BorderRadius.circular(5),
             ),
           ),
           onPressed: onPressed,
