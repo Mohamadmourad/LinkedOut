@@ -1,3 +1,4 @@
+import 'package:client/pages/Feed.dart';
 import 'package:client/pages/Login.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Login(),
+      home: Feed(),
     );
   }
 }

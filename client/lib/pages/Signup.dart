@@ -99,7 +99,7 @@ class _SignupState extends State<Signup> {
               style: TextStyle(
                 fontSize: 35,
                 fontWeight: FontWeight.bold,
-                color: Colors.purpleAccent,
+                color: Colors.blueGrey,
               ),
             ),
             Input(
@@ -120,7 +120,7 @@ class _SignupState extends State<Signup> {
               child: DropdownButton<String>(
                 value: selectedValue,
                 dropdownColor: Colors.grey[800],
-                style: TextStyle(color: Colors.purpleAccent),
+                style: TextStyle(color: Colors.blueGrey),
                 items: [
                   DropdownMenuItem(
                     value: "jobSeeker",
@@ -142,7 +142,7 @@ class _SignupState extends State<Signup> {
             CustomButton(
               label: isLoading ? "Loading..." : "Create Account",
               onPressed: handleSignup,
-              color: Colors.purpleAccent,
+              color: Colors.blueGrey,
             ),
             CustomButton(
               label: "You already have an account? Login",
@@ -152,7 +152,7 @@ class _SignupState extends State<Signup> {
                   MaterialPageRoute(builder: (context) => Login()),
                 );
               },
-              color: Colors.purple,
+              color: Colors.blueGrey,
             ),
           ],
         ),

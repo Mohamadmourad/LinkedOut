@@ -59,7 +59,6 @@ class _LoginState extends State<Login> {
         if (data["status"] == 200) {
           var user = data["user"];
           Navigator.pushReplacement(
-            // ignore: use_build_context_synchronously
             context,
             MaterialPageRoute(
               builder: (context) => Home(
@@ -98,7 +97,7 @@ class _LoginState extends State<Login> {
               style: TextStyle(
                 fontSize: 35,
                 fontWeight: FontWeight.bold,
-                color: Colors.purpleAccent,
+                color: Colors.blueGrey,
               ),
             ),
             Input(
@@ -117,7 +116,7 @@ class _LoginState extends State<Login> {
             CustomButton(
               label: isLoading ? "Loading..." : "Login",
               onPressed: handleLogin,
-              color: Colors.purpleAccent,
+              color: Colors.blueGrey,
             ),
             CustomButton(
               label: "Don't have an account? Signup",
@@ -127,7 +126,7 @@ class _LoginState extends State<Login> {
                   MaterialPageRoute(builder: (context) => Signup()),
                 );
               },
-              color: Colors.purple,
+              color: Colors.blueGrey,
             ),
           ],
         ),
