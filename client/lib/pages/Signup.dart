@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:client/components/CustomButton.dart';
-import 'package:client/components/input.dart';
+import 'package:client/components/Input.dart';
 import 'package:client/pages/Home.dart';
 import 'package:client/pages/Login.dart';
 import 'package:flutter/material.dart';
@@ -22,15 +22,14 @@ class _SignupState extends State<Signup> {
   String passwordError = "";
   String selectedValue = "jobSeeker";
 
-   Future<void> handleSignup() async {
+  Future<void> handleSignup() async {
     setState(() => isLoading = true);
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
 
     if (email.isEmpty) {
       setState(() => emailError = "Email is required.");
-    } 
-    else {
+    } else {
       setState(() => emailError = "");
     }
 
@@ -67,17 +66,17 @@ class _SignupState extends State<Signup> {
           print("Signup successful!");
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => Home( userId: userId, role: selectedValue)),
+            MaterialPageRoute(
+                builder: (context) =>
+                    Home(userId: userId, role: selectedValue)),
           );
-        }
-        else if(data['status'] == 403) {
+        } else if (data['status'] == 403) {
           print("Signup failed: ${data['message']}");
           setState(() => emailError = "email already exists");
-        }
-         else {
+        } else {
           print("Signup failed: ${data['message']}");
         }
-      } 
+      }
     } catch (e) {
       print("Error: $e");
     }

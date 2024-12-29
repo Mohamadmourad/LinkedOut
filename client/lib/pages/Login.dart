@@ -1,5 +1,5 @@
 import 'package:client/components/CustomButton.dart';
-import 'package:client/components/input.dart';
+import 'package:client/components/Input.dart';
 import 'package:client/pages/Home.dart';
 import 'package:client/pages/Signup.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +46,7 @@ class _LoginState extends State<Login> {
 
     if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
       final url = Uri.parse("http://192.168.1.8/linkedout/login.php");
-      try{
+      try {
         final response = await http.post(
           url,
           headers: {"Content-Type": "application/json"},
@@ -55,86 +55,83 @@ class _LoginState extends State<Login> {
             "password": passwordController.text,
           }),
         );
-          final data = jsonDecode(response.body);
-          if (data["status"] == 200) {
-            var user = data["user"];
-            Navigator.pushReplacement(
-              // ignore: use_build_context_synchronously
-              context,
-              MaterialPageRoute(
-                builder: (context) => Home(
-                  userId: user["id"],
-                  role: user["role"],
-                ),
+        final data = jsonDecode(response.body);
+        if (data["status"] == 200) {
+          var user = data["user"];
+          Navigator.pushReplacement(
+            // ignore: use_build_context_synchronously
+            context,
+            MaterialPageRoute(
+              builder: (context) => Home(
+                userId: user["id"],
+                role: user["role"],
               ),
-            );
-          }
-           else {
-            setState(() {
-              emailError = data["message"];
-            });
-          }
-        
-      }
-      catch(e){
+            ),
+          );
+        } else {
+          setState(() {
+            emailError = data["message"];
+          });
+        }
+      } catch (e) {
         print(e);
+      }
+      setState(() {
+        isLoading = false;
+      });
     }
-    setState(() {
-      isLoading = false;
-    });
-  }
   }
 
   @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    backgroundColor: Colors.grey[800],
-    body: Center(
-      child: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        shrinkWrap: true,
-        children: [
-          const SizedBox(height: 100),
-          Text(
-            "Login",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 35,
-              fontWeight: FontWeight.bold,
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey[800],
+      body: Center(
+        child: ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          shrinkWrap: true,
+          children: [
+            const SizedBox(height: 100),
+            Text(
+              "Login",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 35,
+                fontWeight: FontWeight.bold,
+                color: Colors.purpleAccent,
+              ),
+            ),
+            Input(
+              label: "Email",
+              error: emailError,
+              controller: emailController,
+              isPassword: false,
+            ),
+            Input(
+              label: "Password",
+              error: passwordError,
+              controller: passwordController,
+              isPassword: true,
+            ),
+            const SizedBox(height: 60),
+            CustomButton(
+              label: isLoading ? "Loading..." : "Login",
+              onPressed: handleLogin,
               color: Colors.purpleAccent,
             ),
-          ),
-          Input(
-            label: "Email",
-            error: emailError,
-            controller: emailController,
-            isPassword: false,
-          ),
-          Input(
-            label: "Password",
-            error: passwordError,
-            controller: passwordController,
-            isPassword: true,
-          ),
-          const SizedBox(height: 60),
-          CustomButton(
-            label: isLoading ? "Loading..." : "Login",
-            onPressed: handleLogin,
-            color: Colors.purpleAccent,
-          ),
-          CustomButton(
-            label: "Don't have an account? Signup",
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => Signup()),
-              );
-            },
-            color: Colors.purple,
-          ),
-        ],
+            CustomButton(
+              label: "Don't have an account? Signup",
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => Signup()),
+                );
+              },
+              color: Colors.purple,
+            ),
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 }
