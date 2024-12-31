@@ -1,24 +1,18 @@
+import 'package:client/pages/Feed.dart';
+import 'package:client/pages/Recruiter_Feed.dart';
 import 'package:flutter/material.dart';
 
-class Home extends StatefulWidget {
+class Home extends StatelessWidget {
   final userId;
   final role;
   const Home({super.key, required this.userId, required this.role});
 
   @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home'),
-      ),
-      body:  Center(
-        child: Text(widget.userId.toString()),
-      ),
-    );
+       if (role == "jobSeeker") {
+      return Feed();
+    } else {
+      return Recuiter_Feed( ownerId: userId);
+    }
   }
 }

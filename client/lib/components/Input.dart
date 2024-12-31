@@ -10,7 +10,7 @@ class Input extends StatefulWidget {
       required this.label,
       required this.error,
       this.controller,
-      required this.isPassword});
+      this.isPassword = false});
 
   @override
   State<Input> createState() => _InputState();

@@ -55,6 +55,7 @@ class _LoginState extends State<Login> {
             "password": passwordController.text,
           }),
         );
+        print(response.body);
         final data = jsonDecode(response.body);
         if (data["status"] == 200) {
           var user = data["user"];

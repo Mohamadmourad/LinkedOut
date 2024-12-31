@@ -1,5 +1,7 @@
 <?php
 header("Content-Type: application/json");
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
 
 require_once "connection.php";
 
@@ -23,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 "status" => 200,
                 "message" => "Login successful",
                 "user" => [
-                    "id" => $user["id"],
+                    "id" => $user["userId"],
                     "email" => $email,
                     "role" => $user["role"]
                 ]
