@@ -1,24 +1,37 @@
 import 'package:flutter/material.dart';
 import 'Profile.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
-class Feed extends StatelessWidget {
-  final List<Map<String, String>> jobs = [
-    {
-      "name": "Software Engineer",
-      "description": "Develop and maintain software solutions.",
-      "skills": "Flutter, Dart, Firebase"
-    },
-    {
-      "name": "Data Analyst",
-      "description": "Analyze and interpret complex datasets.",
-      "skills": "Python, SQL, Excel"
-    },
-    {
-      "name": "UX Designer",
-      "description": "Design user interfaces and improve user experience.",
-      "skills": "Figma, Adobe XD, User Research"
-    },
-  ];
+class Feed extends StatefulWidget {
+  @override
+  _FeedState createState() => _FeedState();
+}
+
+class _FeedState extends State<Feed> {
+  Future<List<Map<String, String>>>? _futureJobs;
+
+  Future<List<Map<String, String>>> fetchJobs() async {
+    final response = await http.get(Uri.parse('http://localhost:8080/getJobs'));
+    if (response.statusCode == 200) {
+      List<dynamic> data = json.decode(response.body);
+      return data
+          .map((item) => {
+                "name": item["name"]?.toString() ?? "",
+                "description": item["description"]?.toString() ?? "",
+                "skills": item["skills"]?.toString() ?? ""
+              })
+          .toList();
+    } else {
+      throw Exception('Failed to load jobs');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _futureJobs = fetchJobs();
+  }
 
   void applyForJob(BuildContext context, String jobName) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -48,51 +61,60 @@ class Feed extends StatelessWidget {
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: jobs.length,
-        itemBuilder: (context, index) {
-          final job = jobs[index];
-          return Card(
-            margin: const EdgeInsets.all(10),
-            color: Colors.grey[900],
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    job["name"]!,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+      body: FutureBuilder<List<Map<String, String>>>(
+        future: _futureJobs,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          final jobs = snapshot.data!;
+          return ListView.builder(
+            itemCount: jobs.length,
+            itemBuilder: (context, index) {
+              final job = jobs[index];
+              return Card(
+                margin: const EdgeInsets.all(10),
+                color: Colors.grey[900],
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        job["name"]!,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        job["description"]!,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        "Skills: ${job["skills"]}",
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                      const SizedBox(height: 10),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.blueGrey),
+                        ),
+                        onPressed: () => applyForJob(context, job["name"]!),
+                        child: const Text(
+                          'Apply',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 5),
-                  Text(
-                    job["description"]!,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    "Skills: ${job["skills"]}",
-                    style: const TextStyle(color: Colors.grey),
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(Colors.blueGrey),
-                    ),
-                    onPressed: () => applyForJob(context, job["name"]!),
-                    child: const Text(
-                      'Apply',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+                ),
+              );
+            },
           );
         },
       ),

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class Recuiter_Feed extends StatefulWidget {
-  final String ownerId;
+  final int ownerId;
   const Recuiter_Feed({super.key, required this.ownerId});
 
   @override
@@ -24,7 +24,8 @@ class _Recuiter_FeedState extends State<Recuiter_Feed> {
   }
 
   Future<void> fetchJobs() async {
-    final url = Uri.parse("http://192.168.1.8/linkedout/getJobById.php?id=${widget.ownerId}");
+    final url =
+        Uri.parse("http://localhost:8080/getJobById.php?id=${widget.ownerId}");
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
@@ -59,8 +60,11 @@ class _Recuiter_FeedState extends State<Recuiter_Feed> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AddJob(ownerId: widget.ownerId)),
-              );
+                MaterialPageRoute(
+                    builder: (context) => AddJob(ownerId: widget.ownerId)),
+              ).then((_) {
+                fetchJobs();
+              });
             },
           ),
         ],
@@ -86,7 +90,8 @@ class _Recuiter_FeedState extends State<Recuiter_Feed> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ApplicantsPage(jobId: job['jobId']),
+                            builder: (context) =>
+                                ApplicantsPage(jobId: job['jobId']),
                           ),
                         );
                       },

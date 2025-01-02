@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -35,13 +37,32 @@ class _ProfilePageState extends State<ProfilePage> {
     bioController.text = profileBio;
   }
 
-  void addSkill() {
+  Future<void> saveProfile() async {
+    final url = 'http://localhost:8080/addProfile.php';
     final newSkill = skillController.text.trim();
-    if (newSkill.isNotEmpty) {
-      setState(() {
-        skills.add(newSkill);
-        skillController.clear();
-      });
+    final body = {
+      'userId': 'currentUserId', // Replace with actual user ID
+      'name': profileName,
+      'bio': profileBio,
+      'skill': newSkill.isNotEmpty ? newSkill : '',
+    };
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(body),
+    );
+
+    if (response.statusCode == 200) {
+      // Handle success
+      if (newSkill.isNotEmpty) {
+        setState(() {
+          skills.add(newSkill);
+          skillController.clear();
+        });
+      }
+    } else {
+      // Handle error
     }
   }
 
@@ -93,6 +114,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   setState(() {
                     profileName = value;
                   });
+                  saveProfile();
                 },
               ),
               const SizedBox(height: 10),
@@ -115,6 +137,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   setState(() {
                     profileBio = value;
                   });
+                  saveProfile();
                 },
               ),
               const SizedBox(height: 20),
@@ -171,9 +194,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.blueGrey),
                 ),
-                onPressed: addSkill,
+                onPressed: saveProfile,
                 child: const Text(
-                  "Add Skill",
+                  "Save",
                   style: TextStyle(color: Colors.white),
                 ),
               ),

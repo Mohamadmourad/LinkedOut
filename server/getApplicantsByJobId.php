@@ -13,26 +13,19 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
         ]);
         exit;
     }
-    $sql = "SELECT * FROM `applications` WHERE `jobId` = ' $jobId'";
+    $sql = "SELECT a.*, u.userId, u.username, u.email, u.bio
+            FROM applications a
+            JOIN users u ON a.applicantId = u.userId
+            WHERE a.jobId = '$jobId'";
     $result = $conn->query($sql);
 
-    if ($result && $result->num_rows > 0) {
-        $applicants = [];
-        while ($row = $result->fetch_assoc()) {
-            $applicants[] = $row; 
-        }
+    $data = [];
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
 
-        if (count($applicants) > 0) {
-            echo json_encode([
-                "status" => 200,
-                "data" => $applicants
-            ]);
-        } else {
-            echo json_encode([
-                "status" => 404,
-                "message" => "No applicants found for the given job."
-            ]);
-        }
-    } }
+    echo json_encode($data);
+}
 
 $conn->close();
+?>

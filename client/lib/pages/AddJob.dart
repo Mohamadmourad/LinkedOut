@@ -20,47 +20,52 @@ class _AddJobState extends State<AddJob> {
   String nameError = "";
   String descriptionError = "";
   List<String> skills = [];
-  final List<String> availableSkills = ["Java", "Javascript", "Nodejs", "Python", "R","React","Flutter"];
+  final List<String> availableSkills = [
+    "Java",
+    "Javascript",
+    "Nodejs",
+    "Python",
+    "R",
+    "React",
+    "Flutter"
+  ];
 
-  Future<void> handleSubmit() async{
-    if(nameController.text.isEmpty){
+  Future<void> handleSubmit() async {
+    if (nameController.text.isEmpty) {
       setState(() {
         nameError = "Name is required.";
       });
-     }
-      else if(descriptionController.text.isEmpty){
-        setState(() {
-          descriptionError = "Description is required.";
-        });
+    } else if (descriptionController.text.isEmpty) {
+      setState(() {
+        descriptionError = "Description is required.";
+      });
+    } else {
+      String fullSkillsList = "";
+      for (String skill in skills) {
+        fullSkillsList += skill + ", ";
       }
-      else{
-        String fullSkillsList = "";
-        for(String skill in skills){
-          fullSkillsList += skill + ", ";
-        }
 
-        final url = Uri.parse("http://192.168.1.8/linkedout/addJob.php");
-        final body = {
+      final url = Uri.parse("http://localhost:8080/addJob.php");
+      final body = {
         "name": nameController.text.trim(),
         "description": descriptionController.text.trim(),
         "skills": fullSkillsList,
-        "owner": widget.ownerId, 
-         };
+        "owner": widget.ownerId,
+      };
 
-        try {
-          final response = await http.post(
-            url,
-            headers: {"Content-Type": "application/json"},
-            body: jsonEncode(body),
-          );
-          if (response.statusCode == 200) {
-            Navigator.pop(context);
-          }
-        } catch (e) {
-          print("Error: $e");
+      try {
+        final response = await http.post(
+          url,
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(body),
+        );
+        if (response.statusCode == 200) {
+          Navigator.pop(context, true);
         }
+      } catch (e) {
+        print("Error: $e");
       }
-      
+    }
   }
 
   @override
@@ -99,7 +104,8 @@ class _AddJobState extends State<AddJob> {
                       borderRadius: BorderRadius.circular(5.0),
                       color: Colors.blueGrey[100],
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     child: DropdownButton<String>(
                       hint: const Text(
                         "Select a skill",
@@ -107,10 +113,12 @@ class _AddJobState extends State<AddJob> {
                       ),
                       value: null,
                       isExpanded: true,
-                      icon: const Icon(Icons.arrow_drop_down, color: Colors.blueGrey),
+                      icon: const Icon(Icons.arrow_drop_down,
+                          color: Colors.blueGrey),
                       underline: Container(),
                       dropdownColor: Colors.blueGrey[200],
-                      style: const TextStyle(color: Colors.blueGrey, fontSize: 16),
+                      style:
+                          const TextStyle(color: Colors.blueGrey, fontSize: 16),
                       items: availableSkills
                           .map((skill) => DropdownMenuItem<String>(
                                 value: skill,
@@ -133,7 +141,8 @@ class _AddJobState extends State<AddJob> {
                     children: skills
                         .map((skill) => Chip(
                               label: Text(skill),
-                              deleteIcon: const Icon(Icons.close, color: Colors.white),
+                              deleteIcon:
+                                  const Icon(Icons.close, color: Colors.white),
                               onDeleted: () {
                                 setState(() {
                                   skills.remove(skill);
