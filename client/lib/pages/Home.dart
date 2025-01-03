@@ -11,7 +11,7 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     var usr_id = int.parse(userId);
     if (role == "jobSeeker") {
-      return Feed();
+      return Feed(userId: usr_id,);
     } else {
       return Recuiter_Feed(ownerId: usr_id);
     }

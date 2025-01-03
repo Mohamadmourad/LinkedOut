@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  final int userId;
+   const ProfilePage({Key? key, required this.userId}) : super(key: key);
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -38,10 +39,10 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> saveProfile() async {
-    final url = 'http://localhost:8080/addProfile.php';
+    final url = 'http://linkedout.42web.io/addProfile.php';
     final newSkill = skillController.text.trim();
     final body = {
-      'userId': 'currentUserId', // Replace with actual user ID
+      'userId': widget.userId, // Replace with actual user ID
       'name': profileName,
       'bio': profileBio,
       'skill': newSkill.isNotEmpty ? newSkill : '',

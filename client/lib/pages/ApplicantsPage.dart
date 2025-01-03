@@ -23,7 +23,7 @@ class _ApplicantsPageState extends State<ApplicantsPage> {
 
   Future<void> fetchApplicants() async {
     final url = Uri.parse(
-        "http://localhost:8080/getApplicantsByJobId.php?jobId=${widget.jobId}");
+        "http://linkedout.42web.io/getApplicantsByJobId.php?jobId=${widget.jobId}");
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {

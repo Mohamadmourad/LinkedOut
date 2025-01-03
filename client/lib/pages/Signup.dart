@@ -43,7 +43,7 @@ class _SignupState extends State<Signup> {
 
     if (emailError.isNotEmpty || passwordError.isNotEmpty) return;
 
-    final url = Uri.parse("http://localhost:8080/signup.php");
+    final url = Uri.parse("http://linkedout.42web.io/signup.php");
     final body = {
       "email": email,
       "password": password,

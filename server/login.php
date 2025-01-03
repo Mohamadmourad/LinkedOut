@@ -16,6 +16,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
+    $password = md5($password);
+
     $result = $conn->query("SELECT * FROM users WHERE email = '$email' AND password = '$password'");
 
     if ($result->num_rows > 0) {

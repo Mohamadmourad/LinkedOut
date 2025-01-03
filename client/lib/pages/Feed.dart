@@ -4,6 +4,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class Feed extends StatefulWidget {
+  final int userId;  
+
+  Feed({required this.userId});
+
   @override
   _FeedState createState() => _FeedState();
 }
@@ -11,8 +15,8 @@ class Feed extends StatefulWidget {
 class _FeedState extends State<Feed> {
   Future<List<Map<String, String>>>? _futureJobs;
 
-  Future<List<Map<String, String>>> fetchJobs() async {
-    final response = await http.get(Uri.parse('http://localhost:8080/getJobs'));
+  Future<List<Map<String, String>>> fetchJobs(int userId) async {
+    final response = await http.get(Uri.parse('http://linkedout.42web.io/getJobs'));
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
       return data
@@ -30,7 +34,8 @@ class _FeedState extends State<Feed> {
   @override
   void initState() {
     super.initState();
-    _futureJobs = fetchJobs();
+    // Pass userId to fetchJobs
+    _futureJobs = fetchJobs(widget.userId);
   }
 
   void applyForJob(BuildContext context, String jobName) {
@@ -55,13 +60,13 @@ class _FeedState extends State<Feed> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ProfilePage()),
+                MaterialPageRoute(builder: (context) => ProfilePage(userId: widget.userId,)),
               );
             },
           ),
         ],
       ),
-      body: FutureBuilder<List<Map<String, String>>>(
+      body: FutureBuilder<List<Map<String, String>>>( 
         future: _futureJobs,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {

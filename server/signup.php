@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-
+    $password = md5($password);
     $sql = "INSERT INTO users (email, password, role) VALUES ('$email', '$password', '$role')";
 
     if ($conn->query($sql) === TRUE) {
