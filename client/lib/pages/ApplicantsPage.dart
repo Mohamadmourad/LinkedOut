@@ -80,7 +80,7 @@ class _ApplicantsPageState extends State<ApplicantsPage> {
                             style: const TextStyle(color: Colors.grey),
                           ),
                           Text(
-                            "Bio: " + applicant['bio'] ?? 'No bio available.',
+                            "Bio: " + applicant['bio'],
                             style: const TextStyle(color: Colors.grey),
                           ),
                           Text(
