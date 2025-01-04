@@ -42,7 +42,7 @@ class _ProfilePageState extends State<ProfilePage> {
     final url = 'http://linkedout.42web.io/addProfile.php';
     final newSkill = skillController.text.trim();
     final body = {
-      'userId': widget.userId, // Replace with actual user ID
+      'userId': widget.userId, 
       'name': profileName,
       'bio': profileBio,
       'skill': newSkill.isNotEmpty ? newSkill : '',

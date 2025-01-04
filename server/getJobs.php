@@ -2,7 +2,8 @@
 require_once "connection.php";
 
 if ($_SERVER["REQUEST_METHOD"] === "GET") {
-    $sql = "SELECT * FROM `jobs`";
+    $sql = "SELECT * FROM `jobs` LEFT JOIN 'applications' on jobs.jobId = applications.jobId WHERE applications.jobId IS NULL";
+    
     $result = $conn->query($sql);
     $jobs = [];
     if ($result->num_rows > 0) {
