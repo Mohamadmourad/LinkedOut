@@ -9,22 +9,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $userId = $input["userId"] ?? '';
     $name = $input["name"] ?? '';
     $bio = $input["bio"] ?? '';
-    $skill = $input["skill"] ?? '';
+    $skillInput = $input["skill"] ?? [];
+    if (!is_array($skillInput)) {
+        $skillInput = [$skillInput];
+    }
 
-    // Update user information
+
     $sqlUser = "UPDATE `users` SET `username`='$name', `bio`='$bio' WHERE `userId`='$userId'";
     if ($conn->query($sqlUser) === TRUE) {
 
-        // Insert skill
-        $sqlSkill = "INSERT INTO `skills` (`userId`, `skill`) VALUES ('$userId', '$skill')";
-        if ($conn->query($sqlSkill) === TRUE) {
-            echo json_encode([
-                "status" => 200,
-                "message" => "Profile updated successfully",
-            ]);
-        } else {
+
+        $sqlDeleteSkills = "DELETE FROM `skills` WHERE `userId`='$userId'";
+        if ($conn->query($sqlDeleteSkills) !== TRUE) {
             echo json_encode(["status" => 500, "message" => "Error: " . $conn->error]);
+            exit;
         }
+
+
+        foreach ($skillInput as $s) {
+            $sqlSkill = "INSERT INTO `skills` (`userId`, `skill`) VALUES ('$userId', '$s')";
+            if ($conn->query($sqlSkill) !== TRUE) {
+                echo json_encode(["status" => 500, "message" => "Error: " . $conn->error]);
+                exit;
+            }
+        }
+        echo json_encode([
+            "status" => 200,
+            "message" => "Profile updated successfully",
+        ]);
 
     } else {
         echo json_encode(["status" => 500, "message" => "Error updating user: " . $conn->error]);

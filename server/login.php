@@ -28,14 +28,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             "status" => 200,
             "message" => "Login successful",
             "user" => [
-                "id" => $user["userId"],
+                "id" => (int) $user["userId"],
                 "email" => $email,
                 "role" => $user["role"]
             ]
         ]);
 
     } else {
-        // User not found
+
         echo json_encode(["status" => 404, "message" => "Invalid email or password."]);
     }
 

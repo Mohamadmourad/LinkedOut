@@ -19,9 +19,11 @@ class _FeedState extends State<Feed> {
     final response = await http
         .get(Uri.parse('https://phhhhp.youssofkhawaja.com/getJobs.php'));
     if (response.statusCode == 200) {
-      List<dynamic> data = json.decode(response.body);
+      final decoded = json.decode(response.body);
+      final data = decoded["data"] as List<dynamic>;
       return data
           .map((item) => {
+                "jobId": item["jobId"]?.toString() ?? "",
                 "name": item["name"]?.toString() ?? "",
                 "description": item["description"]?.toString() ?? "",
                 "skills": item["skills"]?.toString() ?? ""
@@ -32,20 +34,42 @@ class _FeedState extends State<Feed> {
     }
   }
 
+  Future<Map<String, dynamic>> applyJob(int userId, String jobId) async {
+    final response = await http.post(
+      Uri.parse('https://phhhhp.youssofkhawaja.com/applyJob.php'),
+      body: {
+        'userId': userId.toString(),
+        'jobId': jobId,
+      },
+    );
+
+    return json.decode(response.body);
+  }
+
   @override
   void initState() {
     super.initState();
-    // Pass userId to fetchJobs
+
     _futureJobs = fetchJobs(widget.userId);
   }
 
-  void applyForJob(BuildContext context, String jobName) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('You have applied for $jobName!'),
-        duration: const Duration(seconds: 2),
-      ),
-    );
+  void applyForJob(BuildContext context, String jobName, String jobId) async {
+    final result = await applyJob(widget.userId, jobId);
+    if (result["status"] == "success") {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('You have applied for $jobName!'),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(result["message"] ?? 'Application failed.'),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
   }
 
   @override
@@ -74,7 +98,7 @@ class _FeedState extends State<Feed> {
         future: _futureJobs,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: Text("No jobs available"));
           }
           final jobs = snapshot.data!;
           return ListView.builder(
@@ -113,7 +137,8 @@ class _FeedState extends State<Feed> {
                           backgroundColor:
                               MaterialStateProperty.all(Colors.blueGrey),
                         ),
-                        onPressed: () => applyForJob(context, job["name"]!),
+                        onPressed: () =>
+                            applyForJob(context, job["name"]!, job["jobId"]!),
                         child: const Text(
                           'Apply',
                           style: TextStyle(color: Colors.white),

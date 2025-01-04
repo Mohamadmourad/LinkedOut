@@ -7,7 +7,7 @@ require_once "connection.php";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $input = json_decode(file_get_contents("php://input"), true);
 
-    // Retrieve data from the decoded JSON
+
     $email = $input["email"] ?? '';
     $password = $input["password"] ?? '';
     $role = $input["role"] ?? '';
