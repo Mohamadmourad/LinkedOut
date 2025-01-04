@@ -1,6 +1,6 @@
 <?php
 header("Content-Type: application/json");
-
+header("Access-Control-Allow-Origin: *");
 require_once "connection.php";
 
 if ($_SERVER["REQUEST_METHOD"] === "GET") {
@@ -21,7 +21,17 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
 
     $data = [];
     while ($row = $result->fetch_assoc()) {
-        $data[] = $row;
+        $data[] = [
+            "applicationId" => $row['applicationId'],
+            "jobId" => $row['jobId'],
+            "applicantId" => $row['applicantId'],
+            "skills" => $row['skills'],
+            "dateOfApplication" => $row['dateOfApplication'],
+            "userId" => $row['userId'],
+            "username" => $row['username'],
+            "email" => $row['email'],
+            "bio" => $row['bio']
+        ];
     }
 
     echo json_encode($data);

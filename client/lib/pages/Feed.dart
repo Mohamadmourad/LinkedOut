@@ -17,30 +17,35 @@ class _FeedState extends State<Feed> {
   bool _isLoading = true; 
   Set<String> _appliedJobs = {}; 
 
-  Future<void> fetchJobs(int userId) async {
-    try {
-      final response = await http.get(Uri.parse('http://linkedout.42web.io/getJobs'));
-      if (response.statusCode == 200) {
-        List<dynamic> data = json.decode(response.body);
-        setState(() {
-          jobs = data
-              .map((item) => {
-                    "name": item["name"]?.toString() ?? "",
-                    "description": item["description"]?.toString() ?? "",
-                    "skills": item["skills"]?.toString() ?? ""
-                  })
-              .toList();
-          _isLoading = false;
-        });
-      } else {
-        throw Exception('Failed to load jobs');
-      }
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
-      print(e);
+  Future<List<Map<String, String>>> fetchJobs(int userId) async {
+    final response = await http
+        .get(Uri.parse('https://phhhhp.youssofkhawaja.com/getJobs.php'));
+    if (response.statusCode == 200) {
+      final decoded = json.decode(response.body);
+      final data = decoded["data"] as List<dynamic>;
+      return data
+          .map((item) => {
+                "jobId": item["jobId"]?.toString() ?? "",
+                "name": item["name"]?.toString() ?? "",
+                "description": item["description"]?.toString() ?? "",
+                "skills": item["skills"]?.toString() ?? ""
+              })
+          .toList();
+    } else {
+      throw Exception('Failed to load jobs');
     }
+  }
+
+  Future<Map<String, dynamic>> applyJob(int userId, String jobId) async {
+    final response = await http.post(
+      Uri.parse('https://phhhhp.youssofkhawaja.com/applyJob.php'),
+      body: {
+        'userId': userId.toString(),
+        'jobId': jobId,
+      },
+    );
+
+    return json.decode(response.body);
   }
 
   @override
@@ -128,7 +133,7 @@ class _FeedState extends State<Feed> {
                                 ),
                               ),
                               onPressed: isApplied
-                                  ? null // Disable the button if already applied
+                                  ? null 
                                   : () => applyForJob(context, job["name"]!),
                               child: Text(
                                 isApplied ? 'Applied' : 'Apply',

@@ -1,5 +1,6 @@
 <?php
 header("Content-Type: application/json");
+header("Access-Control-Allow-Origin: *");
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
 
@@ -23,18 +24,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
 
-            echo json_encode([
-                "status" => 200,
-                "message" => "Login successful",
-                "user" => [
-                    "id" => $user["userId"],
-                    "email" => $email,
-                    "role" => $user["role"]
-                ]
-            ]);
-        
+        echo json_encode([
+            "status" => 200,
+            "message" => "Login successful",
+            "user" => [
+                "id" => (int) $user["userId"],
+                "email" => $email,
+                "role" => $user["role"]
+            ]
+        ]);
+
     } else {
-        // User not found
+
         echo json_encode(["status" => 404, "message" => "Invalid email or password."]);
     }
 

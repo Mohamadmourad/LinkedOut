@@ -23,11 +23,12 @@ class _ApplicantsPageState extends State<ApplicantsPage> {
 
   Future<void> fetchApplicants() async {
     final url = Uri.parse(
-        "http://linkedout.42web.io/getApplicantsByJobId.php?jobId=${widget.jobId}");
+        "https://phhhhp.youssofkhawaja.com/getApplicantsByJobId.php?jobId=${widget.jobId}");
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(response.body)['data'];
+        final List<dynamic> data = jsonDecode(response.body);
+        print(data);
         setState(() {
           applicants = data.cast<Map<String, dynamic>>();
           isLoading = false;
@@ -68,12 +69,25 @@ class _ApplicantsPageState extends State<ApplicantsPage> {
                     final applicant = applicants[index];
                     return ListTile(
                       title: Text(
-                        applicant['name'],
+                        "Username: " + applicant['username'],
                         style: const TextStyle(color: Colors.white),
                       ),
-                      subtitle: Text(
-                        applicant['email'],
-                        style: const TextStyle(color: Colors.grey),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Email: " + applicant['email'],
+                            style: const TextStyle(color: Colors.grey),
+                          ),
+                          Text(
+                            "Bio: " + applicant['bio'] ?? 'No bio available.',
+                            style: const TextStyle(color: Colors.grey),
+                          ),
+                          Text(
+                            'Applied on: ${applicant['dateOfApplication']}',
+                            style: const TextStyle(color: Colors.grey),
+                          ),
+                        ],
                       ),
                       trailing:
                           const Icon(Icons.person, color: Colors.blueGrey),

@@ -45,7 +45,7 @@ class _AddJobState extends State<AddJob> {
         fullSkillsList += skill + ", ";
       }
 
-      final url = Uri.parse("http://192.168.1.8/linkedOut/addJob.php");
+      final url = Uri.parse("https://phhhhp.youssofkhawaja.com/addJob.php");
       final body = {
         "name": nameController.text.trim(),
         "description": descriptionController.text.trim(),

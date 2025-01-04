@@ -4,28 +4,16 @@ import 'package:http/http.dart' as http;
 
 class ProfilePage extends StatefulWidget {
   final int userId;
-   const ProfilePage({Key? key, required this.userId}) : super(key: key);
+  const ProfilePage({Key? key, required this.userId}) : super(key: key);
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  String profileName = "John Doe";
-  String profileBio =
-      "Passionate developer with a love for building user-friendly applications.";
-  List<String> skills = [
-    "Flutter",
-    "Dart",
-    "Firebase",
-    "JavaScript",
-    "React",
-    "Python",
-    "Node.js",
-    "SQL",
-    "Git",
-    "REST APIs",
-  ];
+  String profileName = "";
+  String profileBio = "";
+  List<String> skills = [];
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController bioController = TextEditingController();
@@ -34,18 +22,39 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
+    fetchProfile();
     nameController.text = profileName;
     bioController.text = profileBio;
   }
 
+  Future<void> fetchProfile() async {
+    final url =
+        'https://phhhhp.youssofkhawaja.com/getProfile.php?userId=${widget.userId}';
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data['status'] == 200) {
+        final user = data['user'];
+        print(user['skills']);
+        setState(() {
+          profileName = user['username'] ?? 'John Doe';
+          profileBio = user['bio'] ??
+              'Passionate developer with a love for building user-friendly applications.';
+          skills = List<String>.from(user['skills'] ?? []);
+        });
+        nameController.text = profileName;
+        bioController.text = profileBio;
+      }
+    }
+  }
+
   Future<void> saveProfile() async {
-    final url = 'http://linkedout.42web.io/addProfile.php';
-    final newSkill = skillController.text.trim();
+    final url = 'https://phhhhp.youssofkhawaja.com/addProfile.php';
     final body = {
-      'userId': widget.userId, 
+      'userId': widget.userId,
       'name': profileName,
       'bio': profileBio,
-      'skill': newSkill.isNotEmpty ? newSkill : '',
+      'skill': skills,
     };
 
     final response = await http.post(
@@ -55,16 +64,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
 
     if (response.statusCode == 200) {
-      // Handle success
-      if (newSkill.isNotEmpty) {
-        setState(() {
-          skills.add(newSkill);
-          skillController.clear();
-        });
-      }
-    } else {
-      // Handle error
-    }
+    } else {}
   }
 
   void removeSkill(String skill) {
@@ -115,7 +115,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   setState(() {
                     profileName = value;
                   });
-                  saveProfile();
                 },
               ),
               const SizedBox(height: 10),
@@ -138,7 +137,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   setState(() {
                     profileBio = value;
                   });
-                  saveProfile();
                 },
               ),
               const SizedBox(height: 20),
@@ -195,7 +193,21 @@ class _ProfilePageState extends State<ProfilePage> {
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.blueGrey),
                 ),
-                onPressed: saveProfile,
+                onPressed: () {
+                  final inputText = skillController.text.trim();
+                  if (inputText.isNotEmpty) {
+                    final newSkills = inputText
+                        .split(',')
+                        .map((s) => s.trim())
+                        .where((s) => s.isNotEmpty)
+                        .toList();
+                    setState(() {
+                      skills.addAll(newSkills);
+                      skillController.clear();
+                    });
+                  }
+                  saveProfile();
+                },
                 child: const Text(
                   "Save",
                   style: TextStyle(color: Colors.white),
