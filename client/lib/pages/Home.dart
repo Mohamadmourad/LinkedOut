@@ -9,11 +9,12 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var usr_id = int.parse(userId);
     if (role == "jobSeeker") {
-      return Feed(userId: usr_id,);
+      return Feed(
+        userId: userId,
+      );
     } else {
-      return Recuiter_Feed(ownerId: usr_id);
+      return Recuiter_Feed(ownerId: userId);
     }
   }
 }

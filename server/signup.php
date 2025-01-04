@@ -1,5 +1,6 @@
-<?php 
+<?php
 header("Content-Type: application/json");
+header("Access-Control-Allow-Origin: *");
 
 require_once "connection.php";
 
@@ -13,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $sql = "SELECT * FROM users WHERE email = '$email'";
     $result = $conn->query($sql);
-    if($result->num_rows > 0) {
+    if ($result->num_rows > 0) {
         echo json_encode(["status" => 403, "message" => "User already exists"]);
         exit();
     }
@@ -22,11 +23,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sql = "INSERT INTO users (email, password, role) VALUES ('$email', '$password', '$role')";
 
     if ($conn->query($sql) === TRUE) {
-        $newUserId = $conn->insert_id; 
+        $newUserId = $conn->insert_id;
         echo json_encode([
             "status" => 200,
             "message" => "User created successfully",
-            "user_id" => $newUserId 
+            "user_id" => $newUserId
         ]);
     } else {
         echo json_encode(["status" => "error", "message" => "Error: " . $conn->error]);

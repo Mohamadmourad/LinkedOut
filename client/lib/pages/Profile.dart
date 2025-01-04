@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 class ProfilePage extends StatefulWidget {
   final int userId;
-   const ProfilePage({Key? key, required this.userId}) : super(key: key);
+  const ProfilePage({Key? key, required this.userId}) : super(key: key);
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -39,7 +39,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> saveProfile() async {
-    final url = 'http://linkedout.42web.io/addProfile.php';
+    final url = 'https://phhhhp.youssofkhawaja.com/addProfile.php';
     final newSkill = skillController.text.trim();
     final body = {
       'userId': widget.userId, // Replace with actual user ID

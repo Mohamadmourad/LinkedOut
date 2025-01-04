@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class Feed extends StatefulWidget {
-  final int userId;  
+  final int userId;
 
   Feed({required this.userId});
 
@@ -16,7 +16,8 @@ class _FeedState extends State<Feed> {
   Future<List<Map<String, String>>>? _futureJobs;
 
   Future<List<Map<String, String>>> fetchJobs(int userId) async {
-    final response = await http.get(Uri.parse('http://linkedout.42web.io/getJobs'));
+    final response = await http
+        .get(Uri.parse('https://phhhhp.youssofkhawaja.com/getJobs.php'));
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
       return data
@@ -60,13 +61,16 @@ class _FeedState extends State<Feed> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ProfilePage(userId: widget.userId,)),
+                MaterialPageRoute(
+                    builder: (context) => ProfilePage(
+                          userId: widget.userId,
+                        )),
               );
             },
           ),
         ],
       ),
-      body: FutureBuilder<List<Map<String, String>>>( 
+      body: FutureBuilder<List<Map<String, String>>>(
         future: _futureJobs,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {

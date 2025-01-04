@@ -24,8 +24,8 @@ class _Recuiter_FeedState extends State<Recuiter_Feed> {
   }
 
   Future<void> fetchJobs() async {
-    final url =
-        Uri.parse("http://linkedout.42web.io/getJobById.php?id=${widget.ownerId}");
+    final url = Uri.parse(
+        "https://phhhhp.youssofkhawaja.com/getJobById.php?id=${widget.ownerId}");
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
